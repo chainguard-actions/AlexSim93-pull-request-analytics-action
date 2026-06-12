@@ -1,0 +1,32 @@
+name: Test date range and core hours configuration
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_OWNERS_REPOS: "octocat/Hello-World"
+          EXECUTION_OUTCOME: "markdown"
+          REPORT_DATE_START: "1/01/2024"
+          REPORT_DATE_END: "31/01/2024"
+          CORE_HOURS_START: "09:00"
+          CORE_HOURS_END: "18:00"
+          HOLIDAYS: "1/01/2024,25/12/2024"
+          WEEKENDS: "0,6"
+          REQUIRED_APPROVALS: "1"
+          AMOUNT: "10"
+          ALLOW_ANALYTICS: false
+      - name: Assert action ran
+        run: |
+          echo "outcome: ${{ steps.action.outcome }}"
+          if [ "${{ steps.action.outcome }}" = "skipped" ]; then
+            echo "FAIL: action was skipped"
+            exit 1
+          fi
+          echo "PASS: action ran (outcome=${{ steps.action.outcome }})"

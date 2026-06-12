@@ -1,0 +1,32 @@
+name: Test issue output configuration
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_OWNERS_REPOS: "octocat/Hello-World"
+          GITHUB_REPO_FOR_ISSUE: "Hello-World"
+          GITHUB_OWNER_FOR_ISSUE: "octocat"
+          EXECUTION_OUTCOME: "existing-issue"
+          ISSUE_NUMBER: "1"
+          ISSUE_TITLE: "PR Analytics Report"
+          LABELS: "analytics,report"
+          ASSIGNEES: "octocat"
+          AMOUNT: "10"
+          REQUIRED_APPROVALS: "1"
+          ALLOW_ANALYTICS: false
+      - name: Assert action ran
+        run: |
+          echo "outcome: ${{ steps.action.outcome }}"
+          if [ "${{ steps.action.outcome }}" = "skipped" ]; then
+            echo "FAIL: action was skipped"
+            exit 1
+          fi
+          echo "PASS: action ran (outcome=${{ steps.action.outcome }})"

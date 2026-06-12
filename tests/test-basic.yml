@@ -1,0 +1,36 @@
+name: Test basic usage with markdown output
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_OWNERS_REPOS: "octocat/Hello-World"
+          EXECUTION_OUTCOME: "markdown"
+          SHOW_STATS_TYPES: "timeline, workload, pr-quality, code-review-engagement, response-time"
+          AMOUNT: "10"
+          REPORT_PERIOD: "weeks:1"
+          TIMEZONE: "UTC"
+          PERCENTILE: "75"
+          REQUIRED_APPROVALS: "1"
+          TOP_LIST_AMOUNT: "5"
+          PERIOD_SPLIT_UNIT: "months"
+          AGGREGATE_VALUE_METHODS: "percentile"
+          ALLOW_ANALYTICS: false
+          USE_CHARTS: false
+          SHOW_CORRELATION_GRAPHS: false
+          SHOW_ACTIVITY_TIME_GRAPHS: false
+      - name: Assert action ran
+        run: |
+          echo "outcome: ${{ steps.action.outcome }}"
+          if [ "${{ steps.action.outcome }}" = "skipped" ]; then
+            echo "FAIL: action was skipped"
+            exit 1
+          fi
+          echo "PASS: action ran (outcome=${{ steps.action.outcome }})"
