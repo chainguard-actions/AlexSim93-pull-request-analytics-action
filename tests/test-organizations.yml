@@ -1,0 +1,27 @@
+name: Test organizations input and collection output
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          ORGANIZATIONS: "actions"
+          EXECUTION_OUTCOME: "collection"
+          AMOUNT: "5"
+          REQUIRED_APPROVALS: "1"
+          ALLOW_ANALYTICS: false
+      - name: Assert JSON_COLLECTION output is set
+        env:
+          JSON_COLLECTION: ${{ steps.action.outputs.JSON_COLLECTION }}
+        run: |
+          echo "json_collection length: ${#JSON_COLLECTION}"
+          if [ -z "$JSON_COLLECTION" ]; then
+            echo "FAIL: expected JSON_COLLECTION output to be non-empty"
+            exit 1
+          fi
+          echo "PASS"

@@ -1,0 +1,33 @@
+name: Test issue-related inputs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_OWNERS_REPOS: "actions/checkout"
+          GITHUB_REPO_FOR_ISSUE: "checkout"
+          GITHUB_OWNER_FOR_ISSUE: "actions"
+          EXECUTION_OUTCOME: "markdown"
+          AMOUNT: "5"
+          LABELS: "analytics,report"
+          ASSIGNEES: "octocat"
+          ISSUE_TITLE: "PR Analytics Report"
+          ISSUE_NUMBER: "1"
+          REQUIRED_APPROVALS: "1"
+          ALLOW_ANALYTICS: false
+      - name: Assert MARKDOWN output is set
+        env:
+          MARKDOWN: ${{ steps.action.outputs.MARKDOWN }}
+        run: |
+          echo "markdown length: ${#MARKDOWN}"
+          if [ -z "$MARKDOWN" ]; then
+            echo "FAIL: expected MARKDOWN output to be non-empty"
+            exit 1
+          fi
+          echo "PASS"
