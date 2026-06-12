@@ -11,6 +11,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | v4.10.0 | [`v4.10.0`](https://github.com/chainguard-actions/AlexSim93-pull-request-analytics-action/tree/v4.10.0) | [`2393847`](https://github.com/AlexSim93/pull-request-analytics-action/commit/2393847d9ed95dbecf321a527f7402aeb3012040) |
 | v4.7.0 | [`v4.7.0`](https://github.com/chainguard-actions/AlexSim93-pull-request-analytics-action/tree/v4.7.0) | [`a6bf785`](https://github.com/AlexSim93/pull-request-analytics-action/commit/a6bf7855b4e986f2c029e8cdfa5b450ea8b521b8) |
 | v4.8.0 | [`v4.8.0`](https://github.com/chainguard-actions/AlexSim93-pull-request-analytics-action/tree/v4.8.0) | [`01d9a21`](https://github.com/AlexSim93/pull-request-analytics-action/commit/01d9a216d16b2eee2ce048c748f3acaac8882990) |
+| v4.8.1 | [`v4.8.1`](https://github.com/chainguard-actions/AlexSim93-pull-request-analytics-action/tree/v4.8.1) | [`c4d0c64`](https://github.com/AlexSim93/pull-request-analytics-action/commit/c4d0c647bc7bccb76b30a75fa656252330a6cdf5) |
 | v4.9.0 | [`v4.9.0`](https://github.com/chainguard-actions/AlexSim93-pull-request-analytics-action/tree/v4.9.0) | [`0ba6293`](https://github.com/AlexSim93/pull-request-analytics-action/commit/0ba6293977ed9a57faa1968e7eec593338b004c2) |
 
 ## Privacy
