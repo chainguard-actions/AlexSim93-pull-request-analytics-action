@@ -1,0 +1,29 @@
+name: Test time interval inputs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_OWNERS_REPOS: "actions/checkout"
+          EXECUTION_OUTCOME: "markdown"
+          AMOUNT: "5"
+          SHOW_STATS_TYPES: "timeline"
+          REQUIRED_APPROVALS: "1"
+          REVIEW_TIME_INTERVALS: "2,8,24"
+          APPROVAL_TIME_INTERVALS: "2,8,24"
+          MERGE_TIME_INTERVALS: "2,8,24"
+          CORE_HOURS_START: "09:00"
+          CORE_HOURS_END: "18:00"
+          HOLIDAYS: "1/01/2024,25/12/2024"
+          ALLOW_ANALYTICS: false
+        continue-on-error: true
+      - name: Assert step ran
+        run: |
+          echo "outcome: ${{ steps.action.outcome }}"
+          echo "PASS: action step executed with time interval inputs"

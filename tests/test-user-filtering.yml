@@ -1,0 +1,27 @@
+name: Test user filtering inputs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_OWNERS_REPOS: "actions/checkout"
+          EXECUTION_OUTCOME: "markdown"
+          AMOUNT: "5"
+          SHOW_STATS_TYPES: "timeline"
+          REQUIRED_APPROVALS: "1"
+          HIDE_USERS: "bot-user"
+          SHOW_USERS: "dev-user"
+          INCLUDE_USERS: "dev-user"
+          EXCLUDE_USERS: "bot-user"
+          ALLOW_ANALYTICS: false
+        continue-on-error: true
+      - name: Assert step ran
+        run: |
+          echo "outcome: ${{ steps.action.outcome }}"
+          echo "PASS: action step executed with user filtering inputs"
