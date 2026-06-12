@@ -1,1 +1,15 @@
-# AlexSim93-pull-request-analytics-action
+# AlexSim93/pull-request-analytics-action
+
+Provides informative reports on team and developer metrics, based on data from pull requests and code reviews
+
+Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at [https://github.com/AlexSim93/pull-request-analytics-action](https://github.com/AlexSim93/pull-request-analytics-action).
+
+## Versions
+
+| Version | Tag | Upstream commit |
+|---------|-----|-----------------|
+| v4.10.0 | [`v4.10.0`](https://github.com/chainguard-actions/AlexSim93-pull-request-analytics-action/tree/v4.10.0) | [`2393847`](https://github.com/AlexSim93/pull-request-analytics-action/commit/2393847d9ed95dbecf321a527f7402aeb3012040) |
+
+## Privacy
+
+This Action contacts Chainguard's licensing server to verify authorization. Connection metadata (IP address, GitHub repository identifier, timestamp, and any metadata encoded in the auth token) is transmitted to Chainguard, Inc. even if authorization is denied in accordance with our [Privacy Notice](https://www.chainguard.dev/legal/privacy-notice)
