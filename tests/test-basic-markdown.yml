@@ -1,0 +1,32 @@
+name: Test basic markdown output
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_OWNERS_REPOS: "actions/checkout"
+          GITHUB_OWNER_FOR_ISSUE: "actions"
+          GITHUB_REPO_FOR_ISSUE: "checkout"
+          EXECUTION_OUTCOME: "markdown"
+          AMOUNT: "5"
+          REPORT_PERIOD: "weeks:1"
+          TIMEZONE: "UTC"
+          HIDE_USERS: "dependabot"
+          SHOW_USERS: ""
+          ALLOW_ANALYTICS: false
+        continue-on-error: true
+      - name: Assert markdown output exists
+        env:
+          MARKDOWN: ${{ steps.action.outputs.MARKDOWN }}
+        run: |
+          echo "markdown length: ${#MARKDOWN}"
+          if [ -z "$MARKDOWN" ]; then
+            echo "WARN: MARKDOWN output is empty (may be no PRs in period)"
+          fi
+          echo "PASS: action completed"

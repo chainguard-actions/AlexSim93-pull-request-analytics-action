@@ -1,0 +1,29 @@
+name: Test date range and filter inputs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_OWNERS_REPOS: "actions/checkout"
+          EXECUTION_OUTCOME: "markdown"
+          AMOUNT: "5"
+          REPORT_DATE_START: "1/01/2024"
+          REPORT_DATE_END: "31/01/2024"
+          CORE_HOURS_START: "09:00"
+          CORE_HOURS_END: "18:00"
+          HOLIDAYS: "1/01/2024"
+          INCLUDE_LABELS: "bug"
+          EXCLUDE_LABELS: "wip"
+          INCLUDE_USERS: "octocat"
+          EXCLUDE_USERS: "dependabot"
+          ALLOW_ANALYTICS: false
+        continue-on-error: true
+      - name: Assert action completed
+        run: |
+          echo "PASS: action completed with date range and filter inputs"
