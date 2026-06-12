@@ -9,6 +9,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | Version | Tag | Upstream commit |
 |---------|-----|-----------------|
 | v4.10.0 | [`v4.10.0`](https://github.com/chainguard-actions/AlexSim93-pull-request-analytics-action/tree/v4.10.0) | [`2393847`](https://github.com/AlexSim93/pull-request-analytics-action/commit/2393847d9ed95dbecf321a527f7402aeb3012040) |
+| v4.7.0 | [`v4.7.0`](https://github.com/chainguard-actions/AlexSim93-pull-request-analytics-action/tree/v4.7.0) | [`a6bf785`](https://github.com/AlexSim93/pull-request-analytics-action/commit/a6bf7855b4e986f2c029e8cdfa5b450ea8b521b8) |
 | v4.9.0 | [`v4.9.0`](https://github.com/chainguard-actions/AlexSim93-pull-request-analytics-action/tree/v4.9.0) | [`0ba6293`](https://github.com/AlexSim93/pull-request-analytics-action/commit/0ba6293977ed9a57faa1968e7eec593338b004c2) |
 
 ## Privacy
