@@ -1,4 +1,4 @@
-name: Test time interval inputs
+name: Test user and label filter inputs
 on:
   workflow_dispatch:
 jobs:
@@ -12,12 +12,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EXECUTION_OUTCOME: "markdown"
           AMOUNT: "1"
-          REVIEW_TIME_INTERVALS: "2,8,24"
-          APPROVAL_TIME_INTERVALS: "2,8,24"
-          MERGE_TIME_INTERVALS: "2,8,24"
-          TIMEZONE: "UTC"
-          CORE_HOURS_START: "09:00"
-          CORE_HOURS_END: "18:00"
+          INCLUDE_USERS: "octocat"
+          EXCLUDE_USERS: "ghost"
+          HIDE_USERS: "dependabot"
+          SHOW_USERS: "octocat"
+          INCLUDE_LABELS: "feature"
+          EXCLUDE_LABELS: "wip"
           REQUIRED_APPROVALS: "1"
       - name: Assert markdown output is non-empty
         env:

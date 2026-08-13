@@ -1,4 +1,4 @@
-name: Test time interval inputs
+name: Test issue-related inputs
 on:
   workflow_dispatch:
 jobs:
@@ -12,12 +12,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EXECUTION_OUTCOME: "markdown"
           AMOUNT: "1"
-          REVIEW_TIME_INTERVALS: "2,8,24"
-          APPROVAL_TIME_INTERVALS: "2,8,24"
-          MERGE_TIME_INTERVALS: "2,8,24"
-          TIMEZONE: "UTC"
-          CORE_HOURS_START: "09:00"
-          CORE_HOURS_END: "18:00"
+          ASSIGNEES: "octocat"
+          LABELS: "report"
+          ISSUE_TITLE: "PR Analytics Report"
+          ISSUE_NUMBER: "1"
+          GITHUB_OWNER_FOR_ISSUE: "actions"
+          GITHUB_REPO_FOR_ISSUE: "checkout"
           REQUIRED_APPROVALS: "1"
       - name: Assert markdown output is non-empty
         env:

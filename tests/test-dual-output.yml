@@ -1,0 +1,56 @@
+name: Test dual output markdown and collection
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNERS_REPOS: "AlexSim93/pull-request-analytics-action"
+          AMOUNT: "5"
+          EXECUTION_OUTCOME: "markdown, collection"
+          SHOW_STATS_TYPES: "pr-quality, code-review-engagement"
+          REQUIRED_APPROVALS: "1"
+          TOP_LIST_AMOUNT: "3"
+          PERIOD_SPLIT_UNIT: "none"
+          ALLOW_ANALYTICS: "false"
+
+      - name: Assert MARKDOWN output is non-empty
+        env:
+          ACTUAL: ${{ steps.action.outputs.MARKDOWN }}
+        run: |
+          echo "actual MARKDOWN (first 500 chars): ${ACTUAL:0:500}"
+          NORM="$(echo "$ACTUAL" | tr -d '[:space:]')"
+          if [ -z "$NORM" ]; then
+            echo "FAIL: MARKDOWN output is empty or whitespace-only"
+            exit 1
+          fi
+          echo "PASS: MARKDOWN output is non-empty"
+
+      - name: Assert JSON_COLLECTION output is non-empty
+        env:
+          ACTUAL: ${{ steps.action.outputs.JSON_COLLECTION }}
+        run: |
+          echo "actual JSON_COLLECTION (first 500 chars): ${ACTUAL:0:500}"
+          NORM="$(echo "$ACTUAL" | tr -d '[:space:]')"
+          if [ -z "$NORM" ]; then
+            echo "FAIL: JSON_COLLECTION output is empty"
+            exit 1
+          fi
+          echo "PASS: JSON_COLLECTION output is non-empty"
+
+      - name: Assert JSON_COLLECTION is valid JSON
+        env:
+          ACTUAL: ${{ steps.action.outputs.JSON_COLLECTION }}
+        run: |
+          if ! echo "$ACTUAL" | python3 -m json.tool > /dev/null 2>&1; then
+            echo "FAIL: JSON_COLLECTION is not valid JSON"
+            echo "actual: $ACTUAL"
+            exit 1
+          fi
+          echo "PASS: JSON_COLLECTION is valid JSON"
