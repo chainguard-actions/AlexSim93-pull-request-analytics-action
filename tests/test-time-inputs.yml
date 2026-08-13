@@ -1,0 +1,32 @@
+name: Test time-related inputs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EXECUTION_OUTCOME: "markdown"
+          AMOUNT: "5"
+          CORE_HOURS_START: "09:00"
+          CORE_HOURS_END: "18:00"
+          TIMEZONE: "America/New_York"
+          HOLIDAYS: "1/01/2024,25/12/2024"
+          REPORT_DATE_START: "1/01/2024"
+          REPORT_DATE_END: "31/12/2024"
+          REQUIRED_APPROVALS: "1"
+          ALLOW_ANALYTICS: false
+      - name: Assert markdown output is present
+        env:
+          ACTUAL: ${{ steps.action.outputs.MARKDOWN }}
+        run: |
+          echo "actual length: ${#ACTUAL}"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: expected MARKDOWN output to be non-empty"
+            exit 1
+          fi
+          echo "PASS"

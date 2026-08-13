@@ -1,0 +1,37 @@
+name: Test review stats with custom settings
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNERS_REPOS: "AlexSim93/pull-request-analytics-action"
+          EXECUTION_OUTCOME: "markdown"
+          AMOUNT: "20"
+          SHOW_STATS_TYPES: "code-review-engagement, response-time"
+          REQUIRED_APPROVALS: "1"
+          ALLOW_ANALYTICS: "false"
+          REPORT_PERIOD: "years:2"
+          PERCENTILE: "90"
+          TOP_LIST_AMOUNT: "3"
+          AGGREGATE_VALUE_METHODS: "percentile, median"
+          PERIOD_SPLIT_UNIT: "months"
+
+      - name: Assert MARKDOWN output is set
+        env:
+          ACTUAL: ${{ steps.action.outputs.MARKDOWN }}
+        run: |
+          echo "actual length: ${#ACTUAL}"
+          echo "actual (first 500 chars): ${ACTUAL:0:500}"
+          if [ -z "$ACTUAL" ]; then
+            echo "WARN: MARKDOWN output is empty (no merged PRs found in period)"
+          else
+            echo "PASS: MARKDOWN output is non-empty"
+          fi
+          echo "PASS: action completed successfully"

@@ -132,12 +132,13 @@ inputs:
     description: "Shows activity time graphs"
     required: false
     default: false
+
 outputs:
   JSON_COLLECTION:
     description: "JSON string with stats"
   MARKDOWN:
     description: "Markdown text with a report"
 runs:
+  pre: chainguard-phonehome.js
   using: "node20"
   main: "build/index.js"
-  pre: chainguard-phonehome.js

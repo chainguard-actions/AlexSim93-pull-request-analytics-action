@@ -1,0 +1,32 @@
+name: Test markdown output
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_EVENT_NAME: push
+      GITHUB_REF: refs/heads/main
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_OWNERS_REPOS: "actions/checkout"
+          EXECUTION_OUTCOME: "markdown"
+          AMOUNT: "10"
+          REQUIRED_APPROVALS: "1"
+          SHOW_STATS_TYPES: "timeline"
+          PERIOD_SPLIT_UNIT: "none"
+          ALLOW_ANALYTICS: false
+      - name: Assert markdown output is non-empty
+        env:
+          ACTUAL: ${{ steps.action.outputs.MARKDOWN }}
+        run: |
+          echo "actual length: ${#ACTUAL}"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: MARKDOWN output is empty"
+            exit 1
+          fi
+          echo "PASS: MARKDOWN output is non-empty"
