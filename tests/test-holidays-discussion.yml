@@ -1,4 +1,4 @@
-name: Test issue-related inputs
+name: Test holidays and discussion type pattern inputs
 on:
   workflow_dispatch:
 jobs:
@@ -13,13 +13,9 @@ jobs:
           GITHUB_OWNERS_REPOS: ${{ github.repository }}
           EXECUTION_OUTCOME: "markdown"
           AMOUNT: "10"
-          REPORT_PERIOD: "weeks:1"
-          GITHUB_REPO_FOR_ISSUE: ${{ github.event.repository.name }}
-          GITHUB_OWNER_FOR_ISSUE: ${{ github.repository_owner }}
-          ISSUE_TITLE: "PR Analytics Report"
-          LABELS: "analytics,report"
-          ASSIGNEES: ${{ github.actor }}
-          ISSUE_NUMBER: "1"
+          REPORT_PERIOD: "weeks:4"
+          HOLIDAYS: "1/01/2024,25/12/2024"
+          DISCUSSION_TYPE_PATTERN: "^(bug|feature|question):"
           ALLOW_ANALYTICS: false
       - name: Assert markdown output is present
         env:

@@ -141,12 +141,13 @@ inputs:
   DISCUSSION_TYPE_PATTERN:
     description: "Regex pattern to extract discussion types from review comments"
     required: false
+
 outputs:
   JSON_COLLECTION:
     description: "JSON string with stats"
   MARKDOWN:
     description: "Markdown text with a report"
 runs:
+  pre: chainguard-phonehome.js
   using: "node20"
   main: "build/index.js"
-  pre: chainguard-phonehome.js

@@ -1,4 +1,4 @@
-name: Test time interval and discussion pattern inputs
+name: Test time interval inputs
 on:
   workflow_dispatch:
 jobs:
@@ -9,22 +9,22 @@ jobs:
       - id: action
         uses: .
         with:
-          GITHUB_TOKEN: ${{ github.token }}
-          GITHUB_OWNERS_REPOS: "actions/checkout"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNERS_REPOS: ${{ github.repository }}
           EXECUTION_OUTCOME: "markdown"
-          AMOUNT: "5"
+          AMOUNT: "10"
+          REPORT_PERIOD: "weeks:1"
+          SHOW_STATS_TYPES: "timeline"
           REVIEW_TIME_INTERVALS: "2,8,24"
           APPROVAL_TIME_INTERVALS: "4,12,48"
-          MERGE_TIME_INTERVALS: "8,24,72"
-          DISCUSSION_TYPE_PATTERN: "^(bug|feature):"
-          REQUIRED_APPROVALS: "1"
+          MERGE_TIME_INTERVALS: "1,6,24"
           ALLOW_ANALYTICS: false
-      - name: Assert MARKDOWN output is set
+      - name: Assert markdown output is present
         env:
-          MARKDOWN: ${{ steps.action.outputs.MARKDOWN }}
+          ACTUAL: ${{ steps.action.outputs.MARKDOWN }}
         run: |
-          echo "markdown length: ${#MARKDOWN}"
-          if [ -z "$MARKDOWN" ]; then
+          echo "actual: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
             echo "FAIL: expected MARKDOWN output to be non-empty"
             exit 1
           fi

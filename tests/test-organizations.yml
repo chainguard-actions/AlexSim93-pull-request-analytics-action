@@ -1,4 +1,4 @@
-name: Test organizations input and collection output
+name: Test organizations input
 on:
   workflow_dispatch:
 jobs:
@@ -9,19 +9,20 @@ jobs:
       - id: action
         uses: .
         with:
-          GITHUB_TOKEN: ${{ github.token }}
-          ORGANIZATIONS: "actions"
-          EXECUTION_OUTCOME: "collection"
-          AMOUNT: "5"
-          REQUIRED_APPROVALS: "1"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNERS_REPOS: ${{ github.repository }}
+          ORGANIZATIONS: ${{ github.repository_owner }}
+          EXECUTION_OUTCOME: "markdown"
+          AMOUNT: "10"
+          REPORT_PERIOD: "weeks:1"
           ALLOW_ANALYTICS: false
-      - name: Assert JSON_COLLECTION output is set
+      - name: Assert markdown output is present
         env:
-          JSON_COLLECTION: ${{ steps.action.outputs.JSON_COLLECTION }}
+          ACTUAL: ${{ steps.action.outputs.MARKDOWN }}
         run: |
-          echo "json_collection length: ${#JSON_COLLECTION}"
-          if [ -z "$JSON_COLLECTION" ]; then
-            echo "FAIL: expected JSON_COLLECTION output to be non-empty"
+          echo "actual: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: expected MARKDOWN output to be non-empty"
             exit 1
           fi
           echo "PASS"

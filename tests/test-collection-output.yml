@@ -1,0 +1,51 @@
+name: Test collection output format
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNERS_REPOS: "AlexSim93/pull-request-analytics-action"
+          EXECUTION_OUTCOME: "collection"
+          AMOUNT: "10"
+          REPORT_DATE_START: "1/01/2023"
+          REPORT_DATE_END: "31/12/2024"
+          REQUIRED_APPROVALS: "1"
+          SHOW_STATS_TYPES: "timeline"
+          ALLOW_ANALYTICS: false
+      - name: Assert JSON_COLLECTION output is set
+        env:
+          ACTUAL: ${{ steps.action.outputs.JSON_COLLECTION }}
+        run: |
+          echo "actual (first 500 chars): ${ACTUAL:0:500}"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: JSON_COLLECTION output is empty"
+            exit 1
+          fi
+          echo "PASS: JSON_COLLECTION output is non-empty"
+      - name: Assert JSON_COLLECTION is valid JSON
+        env:
+          ACTUAL: ${{ steps.action.outputs.JSON_COLLECTION }}
+        run: |
+          echo "$ACTUAL" | python3 -m json.tool > /dev/null 2>&1
+          if [ $? -ne 0 ]; then
+            echo "FAIL: JSON_COLLECTION is not valid JSON"
+            echo "actual: $ACTUAL"
+            exit 1
+          fi
+          echo "PASS: JSON_COLLECTION is valid JSON"
+      - name: Assert JSON_COLLECTION contains total key
+        env:
+          ACTUAL: ${{ steps.action.outputs.JSON_COLLECTION }}
+        run: |
+          echo "$ACTUAL" | python3 -c "import sys,json; d=json.load(sys.stdin); assert 'total' in d, 'missing total key'"
+          if [ $? -ne 0 ]; then
+            echo "FAIL: JSON_COLLECTION does not contain 'total' key"
+            exit 1
+          fi
+          echo "PASS: JSON_COLLECTION contains 'total' key"

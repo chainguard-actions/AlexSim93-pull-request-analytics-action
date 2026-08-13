@@ -1,4 +1,4 @@
-name: Test date range and timezone inputs
+name: Test date range filtering
 on:
   workflow_dispatch:
 jobs:
@@ -9,22 +9,22 @@ jobs:
       - id: action
         uses: .
         with:
-          GITHUB_TOKEN: ${{ github.token }}
-          GITHUB_OWNERS_REPOS: "actions/checkout"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNERS_REPOS: "AlexSim93/pull-request-analytics-action"
           EXECUTION_OUTCOME: "markdown"
-          AMOUNT: "5"
-          REPORT_DATE_START: "1/01/2024"
+          AMOUNT: "50"
+          REPORT_DATE_START: "1/01/2023"
           REPORT_DATE_END: "31/12/2024"
-          TIMEZONE: "America/New_York"
           REQUIRED_APPROVALS: "1"
+          SHOW_STATS_TYPES: "timeline"
           ALLOW_ANALYTICS: false
       - name: Assert MARKDOWN output is set
         env:
-          MARKDOWN: ${{ steps.action.outputs.MARKDOWN }}
+          ACTUAL: ${{ steps.action.outputs.MARKDOWN }}
         run: |
-          echo "markdown length: ${#MARKDOWN}"
-          if [ -z "$MARKDOWN" ]; then
-            echo "FAIL: expected MARKDOWN output to be non-empty"
+          echo "MARKDOWN (first 500 chars): ${ACTUAL:0:500}"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: MARKDOWN output is empty"
             exit 1
           fi
-          echo "PASS"
+          echo "PASS: MARKDOWN output is non-empty"

@@ -1,4 +1,4 @@
-name: Test basic markdown output
+name: Test aggregate value methods
 on:
   workflow_dispatch:
 jobs:
@@ -16,14 +16,14 @@ jobs:
           REPORT_DATE_START: "1/01/2023"
           REPORT_DATE_END: "31/12/2024"
           REQUIRED_APPROVALS: "1"
-          SHOW_STATS_TYPES: "timeline, workload"
+          SHOW_STATS_TYPES: "timeline"
+          AGGREGATE_VALUE_METHODS: "median, average"
           ALLOW_ANALYTICS: false
       - name: Assert MARKDOWN output is set
         env:
           ACTUAL: ${{ steps.action.outputs.MARKDOWN }}
         run: |
-          echo "actual length: ${#ACTUAL}"
-          echo "actual (first 500 chars): ${ACTUAL:0:500}"
+          echo "MARKDOWN (first 500 chars): ${ACTUAL:0:500}"
           if [ -z "$ACTUAL" ]; then
             echo "FAIL: MARKDOWN output is empty"
             exit 1

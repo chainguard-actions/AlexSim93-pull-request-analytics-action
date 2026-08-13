@@ -9,22 +9,22 @@ jobs:
       - id: action
         uses: .
         with:
-          GITHUB_TOKEN: ${{ github.token }}
-          GITHUB_OWNERS_REPOS: "actions/checkout"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNERS_REPOS: ${{ github.repository }}
           EXECUTION_OUTCOME: "markdown"
-          AMOUNT: "5"
-          HIDE_USERS: "dependabot"
-          SHOW_USERS: "octocat"
+          AMOUNT: "10"
+          REPORT_PERIOD: "weeks:4"
           INCLUDE_USERS: "octocat"
           EXCLUDE_USERS: "dependabot"
-          REQUIRED_APPROVALS: "1"
+          HIDE_USERS: "ghost"
+          SHOW_USERS: "octocat"
           ALLOW_ANALYTICS: false
-      - name: Assert MARKDOWN output is set
+      - name: Assert markdown output is present
         env:
-          MARKDOWN: ${{ steps.action.outputs.MARKDOWN }}
+          ACTUAL: ${{ steps.action.outputs.MARKDOWN }}
         run: |
-          echo "markdown length: ${#MARKDOWN}"
-          if [ -z "$MARKDOWN" ]; then
+          echo "actual: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
             echo "FAIL: expected MARKDOWN output to be non-empty"
             exit 1
           fi
