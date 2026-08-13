@@ -1,4 +1,4 @@
-name: Test basic markdown output
+name: Test branch filter and organization inputs
 on:
   workflow_dispatch:
 jobs:
@@ -10,21 +10,22 @@ jobs:
         uses: .
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_OWNERS_REPOS: "AlexSim93/pull-request-analytics-action"
+          GITHUB_OWNERS_REPOS: ${{ github.repository }}
           EXECUTION_OUTCOME: "markdown"
-          AMOUNT: "20"
+          AMOUNT: "10"
+          REPORT_PERIOD: "weeks:4"
+          FILTER_HEAD_BRANCHES: "^feature/"
+          FILTER_BASE_BRANCHES: "^main$"
+          ORGANIZATIONS: ${{ github.repository_owner }}
           REQUIRED_APPROVALS: "1"
-          REPORT_DATE_START: "1/01/2024"
-          REPORT_DATE_END: "31/12/2024"
           ALLOW_ANALYTICS: false
-      - name: Assert MARKDOWN output is non-empty
+      - name: Assert markdown output is non-empty
         env:
           ACTUAL: ${{ steps.action.outputs.MARKDOWN }}
         run: |
           echo "actual length: ${#ACTUAL}"
-          echo "actual (first 500 chars): ${ACTUAL:0:500}"
           if [ -z "$ACTUAL" ]; then
-            echo "FAIL: MARKDOWN output is empty"
+            echo "FAIL: expected non-empty MARKDOWN output"
             exit 1
           fi
-          echo "PASS: MARKDOWN output is non-empty"
+          echo "PASS"

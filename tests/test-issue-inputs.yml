@@ -1,4 +1,4 @@
-name: Test basic markdown output
+name: Test issue-related inputs
 on:
   workflow_dispatch:
 jobs:
@@ -10,21 +10,24 @@ jobs:
         uses: .
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_OWNERS_REPOS: "AlexSim93/pull-request-analytics-action"
+          GITHUB_OWNERS_REPOS: ${{ github.repository }}
           EXECUTION_OUTCOME: "markdown"
-          AMOUNT: "20"
+          AMOUNT: "10"
+          REPORT_PERIOD: "weeks:1"
+          LABELS: "bug,enhancement"
+          ASSIGNEES: "octocat"
+          ISSUE_TITLE: "PR Analytics Report"
+          GITHUB_REPO_FOR_ISSUE: ${{ github.event.repository.name }}
+          GITHUB_OWNER_FOR_ISSUE: ${{ github.repository_owner }}
           REQUIRED_APPROVALS: "1"
-          REPORT_DATE_START: "1/01/2024"
-          REPORT_DATE_END: "31/12/2024"
           ALLOW_ANALYTICS: false
-      - name: Assert MARKDOWN output is non-empty
+      - name: Assert markdown output is non-empty
         env:
           ACTUAL: ${{ steps.action.outputs.MARKDOWN }}
         run: |
           echo "actual length: ${#ACTUAL}"
-          echo "actual (first 500 chars): ${ACTUAL:0:500}"
           if [ -z "$ACTUAL" ]; then
-            echo "FAIL: MARKDOWN output is empty"
+            echo "FAIL: expected non-empty MARKDOWN output"
             exit 1
           fi
-          echo "PASS: MARKDOWN output is non-empty"
+          echo "PASS"
