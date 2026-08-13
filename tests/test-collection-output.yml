@@ -1,4 +1,4 @@
-name: Test filter inputs (users and labels)
+name: Test JSON collection output
 on:
   workflow_dispatch:
 jobs:
@@ -10,24 +10,23 @@ jobs:
         uses: .
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNERS_REPOS: "AlexSim93/pull-request-analytics-action"
           EXECUTION_OUTCOME: "collection"
           AMOUNT: "10"
-          REPORT_PERIOD: "days:7"
+          REPORT_PERIOD: "years:2"
           SHOW_STATS_TYPES: "timeline"
-          INCLUDE_LABELS: "bug,feature"
-          EXCLUDE_LABELS: "wip,draft"
-          INCLUDE_USERS: "octocat"
-          EXCLUDE_USERS: "dependabot"
-          HIDE_USERS: "bot-user"
-          SHOW_USERS: "octocat"
           ALLOW_ANALYTICS: false
-      - name: Assert JSON_COLLECTION output is set
+      - name: Assert JSON_COLLECTION output is present and valid JSON
         env:
           ACTUAL: ${{ steps.action.outputs.JSON_COLLECTION }}
         run: |
-          echo "actual: $ACTUAL"
+          echo "actual (first 500 chars): ${ACTUAL:0:500}"
           if [ -z "$ACTUAL" ]; then
             echo "FAIL: JSON_COLLECTION output is empty"
             exit 1
           fi
-          echo "PASS: JSON_COLLECTION is set"
+          if ! echo "$ACTUAL" | python3 -c "import sys, json; json.load(sys.stdin)" 2>&1; then
+            echo "FAIL: JSON_COLLECTION is not valid JSON"
+            exit 1
+          fi
+          echo "PASS: JSON_COLLECTION is valid JSON"

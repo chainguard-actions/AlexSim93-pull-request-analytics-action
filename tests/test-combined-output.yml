@@ -1,0 +1,42 @@
+name: Test combined markdown and collection output
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNERS_REPOS: "AlexSim93/pull-request-analytics-action"
+          EXECUTION_OUTCOME: "markdown, collection"
+          AMOUNT: "10"
+          REPORT_PERIOD: "years:2"
+          SHOW_STATS_TYPES: "workload"
+          ALLOW_ANALYTICS: false
+      - name: Assert MARKDOWN output is not empty
+        env:
+          ACTUAL: ${{ steps.action.outputs.MARKDOWN }}
+        run: |
+          echo "MARKDOWN (first 500 chars): ${ACTUAL:0:500}"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: MARKDOWN output is empty"
+            exit 1
+          fi
+          echo "PASS: MARKDOWN output is non-empty"
+      - name: Assert JSON_COLLECTION output is present and valid JSON
+        env:
+          ACTUAL: ${{ steps.action.outputs.JSON_COLLECTION }}
+        run: |
+          echo "JSON_COLLECTION (first 500 chars): ${ACTUAL:0:500}"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: JSON_COLLECTION output is empty"
+            exit 1
+          fi
+          if ! echo "$ACTUAL" | python3 -c "import sys, json; json.load(sys.stdin)" 2>&1; then
+            echo "FAIL: JSON_COLLECTION is not valid JSON"
+            exit 1
+          fi
+          echo "PASS: JSON_COLLECTION is valid JSON"

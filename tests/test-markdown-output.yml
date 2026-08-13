@@ -1,0 +1,42 @@
+name: Test markdown output
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNERS_REPOS: "actions/checkout"
+          EXECUTION_OUTCOME: "markdown"
+          AMOUNT: "10"
+          SHOW_STATS_TYPES: "timeline"
+          ALLOW_ANALYTICS: false
+
+      - name: Assert MARKDOWN output is set
+        env:
+          ACTUAL: ${{ steps.action.outputs.MARKDOWN }}
+        run: |
+          echo "actual length: ${#ACTUAL}"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: MARKDOWN output is empty"
+            exit 1
+          fi
+          echo "PASS: MARKDOWN output is set"
+
+      - name: Assert MARKDOWN contains expected content
+        env:
+          ACTUAL: ${{ steps.action.outputs.MARKDOWN }}
+        run: |
+          echo "checking markdown content..."
+          if echo "$ACTUAL" | grep -qi "pull request\|timeline\|review\|merge\|PR"; then
+            echo "PASS: MARKDOWN contains expected PR analytics content"
+          else
+            echo "FAIL: MARKDOWN does not contain expected PR analytics content"
+            echo "Content: $ACTUAL"
+            exit 1
+          fi

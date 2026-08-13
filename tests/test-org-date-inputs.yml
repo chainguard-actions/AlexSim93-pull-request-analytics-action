@@ -1,4 +1,4 @@
-name: Test filter inputs (users and labels)
+name: Test organization, date range, and issue number inputs
 on:
   workflow_dispatch:
 jobs:
@@ -12,14 +12,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EXECUTION_OUTCOME: "collection"
           AMOUNT: "10"
-          REPORT_PERIOD: "days:7"
+          REPORT_DATE_START: "1/01/2024"
+          REPORT_DATE_END: "31/01/2024"
           SHOW_STATS_TYPES: "timeline"
-          INCLUDE_LABELS: "bug,feature"
-          EXCLUDE_LABELS: "wip,draft"
-          INCLUDE_USERS: "octocat"
-          EXCLUDE_USERS: "dependabot"
-          HIDE_USERS: "bot-user"
-          SHOW_USERS: "octocat"
+          ISSUE_NUMBER: "1"
           ALLOW_ANALYTICS: false
       - name: Assert JSON_COLLECTION output is set
         env:

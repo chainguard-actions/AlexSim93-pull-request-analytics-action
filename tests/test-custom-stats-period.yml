@@ -1,0 +1,55 @@
+name: Test custom stats types and report period
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNERS_REPOS: "actions/checkout"
+          EXECUTION_OUTCOME: "collection,markdown"
+          AMOUNT: "20"
+          SHOW_STATS_TYPES: "pr-quality, code-review-engagement"
+          REPORT_PERIOD: "weeks:4"
+          PERCENTILE: "50"
+          TOP_LIST_AMOUNT: "3"
+          AGGREGATE_VALUE_METHODS: "median"
+          ALLOW_ANALYTICS: false
+
+      - name: Assert JSON_COLLECTION output is set
+        env:
+          ACTUAL: ${{ steps.action.outputs.JSON_COLLECTION }}
+        run: |
+          echo "actual: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: JSON_COLLECTION output is empty"
+            exit 1
+          fi
+          echo "PASS: JSON_COLLECTION is set"
+
+      - name: Assert MARKDOWN output is set
+        env:
+          ACTUAL: ${{ steps.action.outputs.MARKDOWN }}
+        run: |
+          echo "actual length: ${#ACTUAL}"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: MARKDOWN output is empty"
+            exit 1
+          fi
+          echo "PASS: MARKDOWN output is set"
+
+      - name: Assert JSON_COLLECTION is valid JSON
+        env:
+          ACTUAL: ${{ steps.action.outputs.JSON_COLLECTION }}
+        run: |
+          echo "$ACTUAL" | python3 -m json.tool > /dev/null 2>&1
+          if [ $? -ne 0 ]; then
+            echo "FAIL: JSON_COLLECTION is not valid JSON"
+            exit 1
+          fi
+          echo "PASS: JSON_COLLECTION is valid JSON"
